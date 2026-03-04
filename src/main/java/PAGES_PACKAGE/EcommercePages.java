@@ -2,6 +2,7 @@ package PAGES_PACKAGE;
 
 import java.time.Duration;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -96,8 +97,14 @@ public class EcommercePages {
     private WebElement orderConfirmation;
 
     public EcommercePages proceedToCheckout() {
-        checkoutBtn.click();
+
+        By checkoutLocator = By.id("checkout");
+
+        wait.until(ExpectedConditions.elementToBeClickable(checkoutLocator));
+        driver.findElement(checkoutLocator).click();
+
         wait.until(ExpectedConditions.urlContains("checkout-step-one"));
+
         return this;
     }
 
@@ -114,12 +121,20 @@ public class EcommercePages {
 
         return this;
     }
-
+    
     public EcommercePages clickContinue() {
-        continueBtn.click();
+
+        By continueLocator = By.id("continue");
+
+        wait.until(ExpectedConditions.elementToBeClickable(continueLocator));
+        driver.findElement(continueLocator).click();
+
         wait.until(ExpectedConditions.urlContains("checkout-step-two"));
+
         return this;
     }
+
+   
 
     public EcommercePages finishOrder() {
         wait.until(ExpectedConditions.elementToBeClickable(finishBtn));

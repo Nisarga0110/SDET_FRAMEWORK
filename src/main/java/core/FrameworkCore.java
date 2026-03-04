@@ -8,7 +8,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.edge.EdgeDriver;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -42,27 +45,40 @@ public class FrameworkCore {
         switch (browser.toLowerCase()) {
 
             case "chrome":
+
                 WebDriverManager.chromedriver().setup();
 
                 ChromeOptions options = new ChromeOptions();
 
-                // Method 1: Disable notifications using argument
+                // Disable browser notifications
                 options.addArguments("--disable-notifications");
 
-                // Method 2: Block notification popup using preferences (recommended)
+                // Disable infobars
+                options.addArguments("--disable-infobars");
+
+                // Run with fresh automation profile
+                options.addArguments("--guest");
+
+                // Disable password manager + breach detection
                 Map<String, Object> prefs = new HashMap<>();
+                prefs.put("credentials_enable_service", false);
+                prefs.put("profile.password_manager_enabled", false);
+                prefs.put("profile.password_manager_leak_detection", false);
                 prefs.put("profile.default_content_setting_values.notifications", 2);
+
                 options.setExperimentalOption("prefs", prefs);
 
                 webDriver = new ChromeDriver(options);
                 break;
 
             case "firefox":
+
                 WebDriverManager.firefoxdriver().setup();
                 webDriver = new FirefoxDriver();
                 break;
 
             case "edge":
+
                 WebDriverManager.edgedriver().setup();
                 webDriver = new EdgeDriver();
                 break;
@@ -75,10 +91,17 @@ public class FrameworkCore {
         setDriver(webDriver);
     }
 
+    /* ======================================================
+                        TESTNG SETUP
+       ====================================================== */
+
     @Parameters("browser")
     @BeforeMethod
     public void setUp(@Optional("chrome") String browser) {
+
         initDriver(browser);
+
+        // Launch SauceDemo
         getDriver().get("https://www.saucedemo.com");
     }
 

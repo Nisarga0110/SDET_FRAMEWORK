@@ -6,7 +6,7 @@ import core.FrameworkCore;
 
 public class E2ETest extends FrameworkCore {
 
-    @Test(retryAnalyzer = utils.RetryAnalyzer.class)
+    @Test//(retryAnalyzer = utils.RetryAnalyzer.class)
     public void completeE2EFlow() {
 
         EcommercePages page = new EcommercePages();
